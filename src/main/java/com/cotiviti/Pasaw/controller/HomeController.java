@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HomeController {
 
-    // private final UserPrincipal userPrincipal;
 
     @GetMapping("/")
     public String greeting(){
@@ -22,7 +21,7 @@ public class HomeController {
 
     @GetMapping("/secured")
     public String test(@AuthenticationPrincipal UserPrincipal userPrincipal){
-        return "Loggeed In! Congratulations !!!!" + userPrincipal.getUsername();
+        return "Loggeed In! Congratulations !!!! Hi " + userPrincipal.getUsername();
     }
 
 }
