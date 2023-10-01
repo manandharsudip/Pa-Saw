@@ -14,4 +14,10 @@ public class HomeController {
         return "<h1>Welcome to Pa:Saw</h1>";
     }
 
+
+    @GetMapping("/test")
+    public String test(){
+        return "<h1>Welcome to Test</h1>";
+    }
+
 }
