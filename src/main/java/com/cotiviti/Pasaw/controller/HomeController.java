@@ -1,5 +1,6 @@
 package com.cotiviti.Pasaw.controller;
 
+import org.apache.tomcat.jni.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +20,24 @@ public class HomeController {
     }
 
 
-    @GetMapping("/secured")
-    public String test(@AuthenticationPrincipal UserPrincipal userPrincipal){
-        return "Loggeed In! Congratulations !!!! Hi " + userPrincipal.getUsername();
+    @GetMapping("/notsecured")
+    public String test(){
+        return "Loggeed In! Congratulations !!!! Hi  this can be viewd by anyone";
+    }
+
+    @GetMapping("/admin")
+    public String admin(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return "Hi "+ userPrincipal.getUsername() + " all good? this can only be viewed by admin and user";
+    }
+
+    @GetMapping("/user")
+    public String user(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return "Hi "+ userPrincipal.getUsername() + " all good? this can only be viewed by admin";
+    }
+
+    @GetMapping("/customer")
+    public String customer(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return "Hi "+ userPrincipal.getUsername() + " all good? this can only be viewed by customer";
     }
 
 }

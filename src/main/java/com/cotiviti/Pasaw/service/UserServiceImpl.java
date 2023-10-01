@@ -10,6 +10,7 @@ public class UserServiceImpl implements UserService {
 
   private static final String EXISTING_EMAIL = "admin@mstech.com";
   private static final String ANOTHER_EMAIL = "user@mstech.com";
+  private static final String CUSTOMER_EMAIL = "customer@mstech.com";
 
   @Override
   public Optional<UserEntity> findByEmail(String email) {
@@ -30,6 +31,15 @@ public class UserServiceImpl implements UserService {
         "$2a$12$M40PodlldfCeS/XfJ/0Bz.xs.Se/NygsBz9QAZbklxnUOvyC5otdm"
       ); // pass
       user.setRole("ROLE_USER");
+      return Optional.of(user);
+    } else if (CUSTOMER_EMAIL.equals(email)) {
+      var user = new UserEntity();
+      user.setId(20L);
+      user.setEmail(CUSTOMER_EMAIL);
+      user.setPassword(
+        "$2a$12$M40PodlldfCeS/XfJ/0Bz.xs.Se/NygsBz9QAZbklxnUOvyC5otdm"
+      ); // pass
+      user.setRole("ROLE_CUSTOMER");
       return Optional.of(user);
     }
 

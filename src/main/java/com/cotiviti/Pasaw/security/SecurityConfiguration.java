@@ -41,10 +41,14 @@ public class SecurityConfiguration {
       .headers(headers -> headers.frameOptions().disable())
       .authorizeHttpRequests(auth ->
         auth
-          .antMatchers("/")
+          .antMatchers("/", "/auth/login", "/notsecured")
           .permitAll()
-          .antMatchers("/auth/login")
-          .permitAll()
+          .antMatchers("/customer")
+          .hasRole("CUSTOMER")
+          .antMatchers("/admin")
+          .hasRole("ADMIN")
+          .antMatchers("/user")
+          .hasAnyRole("ADMIN", "USER")
           .requestMatchers(toH2Console())
           .permitAll()
           .anyRequest()
