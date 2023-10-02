@@ -1,45 +1,26 @@
 package com.cotiviti.Pasaw.service;
 
 import com.cotiviti.Pasaw.entity.UserEntity;
+import com.cotiviti.Pasaw.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-  private static final String EXISTING_EMAIL = "admin@mstech.com";
-  private static final String ANOTHER_EMAIL = "user@mstech.com";
-  private static final String CUSTOMER_EMAIL = "customer@mstech.com";
+  private final UserRepository userRepository;
 
   @Override
   public Optional<UserEntity> findByEmail(String email) {
-    if (EXISTING_EMAIL.equalsIgnoreCase(email)) {
-      var user = new UserEntity();
-      user.setId(1L);
-      user.setEmail(EXISTING_EMAIL);
-      user.setPassword(
-        "$2a$12$M40PodlldfCeS/XfJ/0Bz.xs.Se/NygsBz9QAZbklxnUOvyC5otdm"
-      ); // pass
-      user.setRole("ROLE_ADMIN");
-      return Optional.of(user);
-    } else if (ANOTHER_EMAIL.equals(email)) {
-      var user = new UserEntity();
-      user.setId(10L);
-      user.setEmail(ANOTHER_EMAIL);
-      user.setPassword(
-        "$2a$12$M40PodlldfCeS/XfJ/0Bz.xs.Se/NygsBz9QAZbklxnUOvyC5otdm"
-      ); // pass
-      user.setRole("ROLE_USER");
-      return Optional.of(user);
-    } else if (CUSTOMER_EMAIL.equals(email)) {
-      var user = new UserEntity();
-      user.setId(20L);
-      user.setEmail(CUSTOMER_EMAIL);
-      user.setPassword(
-        "$2a$12$M40PodlldfCeS/XfJ/0Bz.xs.Se/NygsBz9QAZbklxnUOvyC5otdm"
-      ); // pass
-      user.setRole("ROLE_CUSTOMER");
+
+    var user = userRepository.findByEmail(email).orElseThrow();
+
+    if (user!=null){
       return Optional.of(user);
     }
 
