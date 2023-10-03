@@ -1,7 +1,8 @@
-package com.cotiviti.Pasaw.service;
+package com.cotiviti.Pasaw.service.impl;
 
 import com.cotiviti.Pasaw.entity.UserEntity;
 import com.cotiviti.Pasaw.repository.UserRepository;
+import com.cotiviti.Pasaw.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

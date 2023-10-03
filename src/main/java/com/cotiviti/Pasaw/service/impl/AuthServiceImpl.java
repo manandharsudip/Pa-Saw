@@ -1,8 +1,9 @@
-package com.cotiviti.Pasaw.service;
+package com.cotiviti.Pasaw.service.impl;
 
 import com.cotiviti.Pasaw.model.LoginResponse;
 import com.cotiviti.Pasaw.security.JwtIssuer;
 import com.cotiviti.Pasaw.security.UserPrincipal;
+import com.cotiviti.Pasaw.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -47,7 +47,7 @@ public class SecurityConfiguration {
           .hasRole("CUSTOMER")
           .antMatchers("/admin")
           .hasRole("ADMIN")
-          .antMatchers("/user")
+          .antMatchers("/user","/api/ems/category/**")
           .hasAnyRole("ADMIN", "USER")
           .requestMatchers(toH2Console())
           .permitAll()
