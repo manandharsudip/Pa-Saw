@@ -27,6 +27,10 @@ public class AuthServiceImpl implements AuthService {
       )
     );
 
+    // this above line is enough for authentication...
+
+    System.out.println("Authentication Obj: "+ authentication);
+
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     var principal = (UserPrincipal) authentication.getPrincipal();
@@ -37,11 +41,19 @@ public class AuthServiceImpl implements AuthService {
       .map(GrantedAuthority::getAuthority)
       .toList();
 
+    // System.out.println("Roles: "+ roles.contains("ROLE_ADMIN"));
+
     var token = jwtIssuer.issue(
       principal.getUserId(),
       principal.getUsername(),
       roles
     );
+
+    // if (roles.contains(myRole)){
+    //   return LoginResponse.builder().accessToken(token).build();
+    // }
+
     return LoginResponse.builder().accessToken(token).build();
+
   }
 }

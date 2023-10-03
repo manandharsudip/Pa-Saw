@@ -41,7 +41,7 @@ public class SecurityConfiguration {
       .headers(headers -> headers.frameOptions().disable())
       .authorizeHttpRequests(auth ->
         auth
-          .antMatchers("/", "/auth/login", "/notsecured")
+          .antMatchers("/", "/auth/login", "/login", "/notsecured")
           .permitAll()
           .antMatchers("/customer")
           .hasRole("CUSTOMER")
