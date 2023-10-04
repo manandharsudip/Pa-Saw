@@ -3,6 +3,8 @@ package com.cotiviti.Pasaw.entity;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.cotiviti.Pasaw.model.Status;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,9 +43,14 @@ public class ProductEntity {
 
   private Float price;
 
+  @Enumerated(EnumType.ORDINAL)
+  private Status status;
+
   private String imageurl;
 
   private Date created_date;
 
   private Date updated_date;
 }
+
+

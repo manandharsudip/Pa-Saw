@@ -1,6 +1,7 @@
 package com.cotiviti.Pasaw.service.impl;
 
 import com.cotiviti.Pasaw.entity.ProductEntity;
+// import com.cotiviti.Pasaw.model.Status;
 import com.cotiviti.Pasaw.repository.ProductRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
@@ -30,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
       .findByEmail(principal.getEmail())
       .map(user -> {
         product.setUserEntity(user);
+        // product.setStatus(Status.COMING_SOON);
         product.setCreated_date(new Date());
         product.setUpdated_date(new Date());
         return productRepository.save(product);
