@@ -22,7 +22,6 @@ public class CustomUserDetailService implements UserDetailsService {
     var user = userService.findByEmail(username).orElseThrow();
     // later we can fetch this throgh databse: repository
 
-
     // As UserPrincipal is implemented from UserDetails
     return UserPrincipal
       .builder()

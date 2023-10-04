@@ -1,12 +1,8 @@
 package com.cotiviti.Pasaw.service;
 
+import com.cotiviti.Pasaw.entity.UserEntity;
 import java.util.Optional;
 
-
-import com.cotiviti.Pasaw.entity.UserEntity;
-
-
 public interface UserService {
-    public Optional<UserEntity> findByEmail(String email);
-    
+  public Optional<UserEntity> findByEmail(String email);
 }

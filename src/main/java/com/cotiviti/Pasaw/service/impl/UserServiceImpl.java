@@ -3,11 +3,8 @@ package com.cotiviti.Pasaw.service.impl;
 import com.cotiviti.Pasaw.entity.UserEntity;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.service.UserService;
-
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,10 +15,9 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<UserEntity> findByEmail(String email) {
-
     var user = userRepository.findByEmail(email).orElseThrow();
 
-    if (user!=null){
+    if (user != null) {
       return Optional.of(user);
     }
 

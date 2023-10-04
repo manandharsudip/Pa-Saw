@@ -47,7 +47,7 @@ public class SecurityConfiguration {
           .hasRole("CUSTOMER")
           .antMatchers("/admin")
           .hasRole("ADMIN")
-          .antMatchers("/user","/api/ems/category/**")
+          .antMatchers("/user", "/api/ems/category/**", "/api/ems/product/**")
           .hasAnyRole("ADMIN", "USER")
           .requestMatchers(toH2Console())
           .permitAll()
@@ -56,7 +56,6 @@ public class SecurityConfiguration {
       );
     return http.build();
   }
-
 
   // this will make sure password wont be plain text, actually bycrypt
   @Bean

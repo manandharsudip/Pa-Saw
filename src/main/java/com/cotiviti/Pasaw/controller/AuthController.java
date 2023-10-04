@@ -3,7 +3,6 @@ package com.cotiviti.Pasaw.controller;
 import com.cotiviti.Pasaw.model.LoginRequest;
 import com.cotiviti.Pasaw.model.LoginResponse;
 import com.cotiviti.Pasaw.service.AuthService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

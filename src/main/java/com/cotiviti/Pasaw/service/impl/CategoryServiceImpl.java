@@ -35,7 +35,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
       });
 
-    // System.out.println("This is working!!!: Current Active User" + principal.getUsername());
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
@@ -88,8 +87,8 @@ public class CategoryServiceImpl implements CategoryService {
   public ResponseEntity<HttpStatus> deleteCategoryById(Long catId) {
     boolean exists = categoryRepository.existsById(catId);
 
-    if (exists){
-        categoryRepository.deleteById(catId);
+    if (exists) {
+      categoryRepository.deleteById(catId);
     }
 
     return new ResponseEntity<>(HttpStatus.OK);

@@ -21,7 +21,7 @@ public class CustomerController {
   }
 
   @PostMapping("/register")
-  public void register(@RequestBody @Validated String email){
+  public void register(@RequestBody @Validated String email) {
     //
   }
 }

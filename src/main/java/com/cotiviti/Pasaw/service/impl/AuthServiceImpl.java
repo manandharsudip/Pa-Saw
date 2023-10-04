@@ -4,7 +4,6 @@ import com.cotiviti.Pasaw.model.LoginResponse;
 import com.cotiviti.Pasaw.security.JwtIssuer;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.AuthService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,15 +21,12 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public LoginResponse loginAttempt(String email, String password) {
     var authentication = authenticationManager.authenticate(
-      new UsernamePasswordAuthenticationToken(
-        email,
-        password
-      )
+      new UsernamePasswordAuthenticationToken(email, password)
     );
 
     // this above line is enough for authentication...
 
-    System.out.println("Authentication Obj: "+ authentication);
+    System.out.println("Authentication Obj: " + authentication);
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -55,6 +51,5 @@ public class AuthServiceImpl implements AuthService {
     // }
 
     return LoginResponse.builder().accessToken(token).build();
-
   }
 }

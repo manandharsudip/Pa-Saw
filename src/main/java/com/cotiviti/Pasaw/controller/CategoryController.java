@@ -3,11 +3,8 @@ package com.cotiviti.Pasaw.controller;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.CategoryService;
-
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/ems/category")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+  private final CategoryService categoryService;
 
   @GetMapping
   public ResponseEntity<List<CategoryEntity>> allCategories() {
@@ -33,13 +30,15 @@ public class CategoryController {
   }
 
   @GetMapping("/{catId}")
-  public ResponseEntity<CategoryEntity> getCategoryById(@PathVariable("catId") Long catId) {
+  public ResponseEntity<CategoryEntity> getCategoryById(
+    @PathVariable("catId") Long catId
+  ) {
     return categoryService.getCategoryById(catId);
   }
 
   @PostMapping("/add")
   public ResponseEntity<HttpStatus> addNewCategory(
-    @AuthenticationPrincipal UserPrincipal userPrincipal, 
+    @AuthenticationPrincipal UserPrincipal userPrincipal,
     @RequestBody CategoryEntity category
   ) {
     return categoryService.addCategory(userPrincipal, category);
