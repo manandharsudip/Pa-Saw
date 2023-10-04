@@ -14,5 +14,5 @@ public interface CategoryService {
     public ResponseEntity<List<CategoryEntity>> getAllCategory();
     public ResponseEntity<CategoryEntity> getCategoryById(Long catId);
     public ResponseEntity<HttpStatus> updateCategory(Long catId, CategoryEntity category);
-    public ResponseEntity<HttpStatus> deleteCategory(Long catId);
+    public ResponseEntity<HttpStatus> deleteCategoryById(Long catId);
 }

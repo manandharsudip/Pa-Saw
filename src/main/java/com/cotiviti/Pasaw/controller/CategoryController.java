@@ -32,6 +32,11 @@ public class CategoryController {
     return categoryService.getAllCategory();
   }
 
+  @GetMapping("/{catId}")
+  public ResponseEntity<CategoryEntity> getCategoryById(@PathVariable("catId") Long catId) {
+    return categoryService.getCategoryById(catId);
+  }
+
   @PostMapping("/add")
   public ResponseEntity<HttpStatus> addNewCategory(
     @AuthenticationPrincipal UserPrincipal userPrincipal, 
@@ -41,17 +46,17 @@ public class CategoryController {
   }
 
   @PutMapping("/update/{catId}")
-  public ResponseEntity<Long> updateCategory(
+  public ResponseEntity<HttpStatus> updateCategory(
     @PathVariable("catId") Long catId,
     @RequestBody CategoryEntity category
   ) {
-    return new ResponseEntity<Long>(catId, HttpStatus.CREATED);
+    return categoryService.updateCategory(catId, category);
   }
 
   @DeleteMapping("/delete/{catId}")
-  public ResponseEntity<Long> deleteCategoryById(
+  public ResponseEntity<HttpStatus> deleteCategoryById(
     @PathVariable("catId") Long catId
   ) {
-    return new ResponseEntity<Long>(catId, HttpStatus.CREATED);
+    return categoryService.deleteCategoryById(catId);
   }
 }
