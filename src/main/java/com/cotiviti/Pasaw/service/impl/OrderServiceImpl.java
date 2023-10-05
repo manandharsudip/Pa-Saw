@@ -14,6 +14,7 @@ import com.cotiviti.Pasaw.model.OrderStatus;
 import com.cotiviti.Pasaw.repository.OrderRepository;
 import com.cotiviti.Pasaw.repository.ProductRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
+import com.cotiviti.Pasaw.security.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,15 +26,22 @@ public class OrderServiceImpl {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    public void addOrder(OrderDto orderDto){
-        OrdersEntity orderEntity = new OrdersEntity();
-        // actually product id is enough here user id can be extracted from active user session
-        orderEntity.setUserEntity(userRepository.findById(orderDto.getUserid()).orElseThrow());
-        orderEntity.setProductEntity(productRepository.findById(orderDto.getProductid()).orElseThrow());
-        orderEntity.setStatus(OrderStatus.PENDING);
-        orderEntity.setCreated_date(new Date());
-        orderEntity.setUpdated_date(new Date());
-        orderRepository.save(orderEntity);
+    public void addOrder(UserPrincipal userPrincipal, OrderDto orderDto){
+
+        List<Long> cartList = orderDto.getProductList();
+
+        cartList.forEach(productid -> {
+
+            OrdersEntity orderEntity = new OrdersEntity();
+            // actually product id is enough here user id can be extracted from active user session
+            orderEntity.setUserEntity(userRepository.findById(userPrincipal.getUserId()).orElseThrow());
+            orderEntity.setProductEntity(productRepository.findById(productid).orElseThrow());
+            orderEntity.setStatus(OrderStatus.PENDING);
+            orderEntity.setCreated_date(new Date());
+            orderEntity.setUpdated_date(new Date());
+            orderRepository.save(orderEntity);
+        });
+
     }
 
 
