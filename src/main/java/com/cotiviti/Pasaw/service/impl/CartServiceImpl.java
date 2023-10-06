@@ -38,4 +38,9 @@ public class CartServiceImpl {
         List <CartEntity> cartEntity = cartRepository.findByUserEntity(userRepository.findById(id).orElseThrow());
         return new ResponseEntity<>(cartEntity, HttpStatus.OK);
     }
+
+    public ResponseEntity<List<CartEntity>> getCartItemsByUserIdUnProceeded(Long id){
+        List <CartEntity> cartEntity = cartRepository.findByUserEntityAndStatus(userRepository.findById(id).orElseThrow(), CartStatus.NOTCHECKOUT);
+        return new ResponseEntity<>(cartEntity, HttpStatus.OK);
+    }
 }

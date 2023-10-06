@@ -17,7 +17,7 @@ public class OrderDto {
   private Long orderid;
   private Long userid;
   private Long productid;
-  private List<Long> productList;
+  private List<Long> cartList;
   private Long staffid;
   private Long quantity;
 

@@ -37,4 +37,11 @@ public class CartController {
   ) {
     return cartService.getCartItemsByUserId(id);
   }
+
+  @GetMapping("pending/{id}")
+  public ResponseEntity<List<CartEntity>> getCartItemsByUserIdUnProceeded(
+    @PathVariable("id") Long id
+  ) {
+    return cartService.getCartItemsByUserIdUnProceeded(id);
+  }
 }

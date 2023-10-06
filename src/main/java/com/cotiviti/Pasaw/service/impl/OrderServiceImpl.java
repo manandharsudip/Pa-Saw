@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.cotiviti.Pasaw.dto.OrderDto;
 import com.cotiviti.Pasaw.entity.OrdersEntity;
+import com.cotiviti.Pasaw.model.CartStatus;
 import com.cotiviti.Pasaw.model.OrderStatus;
+import com.cotiviti.Pasaw.repository.CartRepository;
 import com.cotiviti.Pasaw.repository.OrderRepository;
-import com.cotiviti.Pasaw.repository.ProductRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 
@@ -24,22 +25,25 @@ public class OrderServiceImpl {
     
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
 
     public void addOrder(UserPrincipal userPrincipal, OrderDto orderDto){
 
-        List<Long> cartList = orderDto.getProductList();
+        List<Long> cartList = orderDto.getCartList();
 
-        cartList.forEach(productid -> {
-
-            OrdersEntity orderEntity = new OrdersEntity();
-            // actually product id is enough here user id can be extracted from active user session
-            orderEntity.setUserEntity(userRepository.findById(userPrincipal.getUserId()).orElseThrow());
-            orderEntity.setProductEntity(productRepository.findById(productid).orElseThrow());
-            orderEntity.setStatus(OrderStatus.PENDING);
-            orderEntity.setCreated_date(new Date());
-            orderEntity.setUpdated_date(new Date());
-            orderRepository.save(orderEntity);
+        cartList.forEach(cartid -> {
+            cartRepository.findById(cartid).map(items -> {
+                OrdersEntity orderEntity = new OrdersEntity();
+                // actually product id is enough here user id can be extracted from active user session
+                orderEntity.setUserEntity(userRepository.findById(userPrincipal.getUserId()).orElseThrow());
+                orderEntity.setProductEntity(items.getProductEntity());
+                orderEntity.setStatus(OrderStatus.PENDING);
+                orderEntity.setCreated_date(new Date());
+                orderEntity.setUpdated_date(new Date());
+                items.setStatus(CartStatus.CHECKOUT);
+                cartRepository.save(items);
+                return orderRepository.save(orderEntity);
+            });
         });
 
     }
