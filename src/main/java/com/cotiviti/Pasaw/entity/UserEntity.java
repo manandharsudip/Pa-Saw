@@ -1,6 +1,9 @@
 package com.cotiviti.Pasaw.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+// import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,10 +26,17 @@ public class UserEntity {
   @Column(nullable = false, unique = true)
   private String email;
 
-  @JsonIgnore
+  private String firstname;
+  private String lastname;
+
+  // @JsonIgnore
   @Column(nullable = false)
   private String password;
 
   @Column(nullable = false)
   private String role;
+
+  private Date created_date;
+
+  private Date updated_date;
 }
