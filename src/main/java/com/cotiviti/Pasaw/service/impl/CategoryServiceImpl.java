@@ -1,10 +1,13 @@
 package com.cotiviti.Pasaw.service.impl;
 
+import com.cotiviti.Pasaw.dto.CategoryDto;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
+import com.cotiviti.Pasaw.functions.CustomFunction;
 import com.cotiviti.Pasaw.repository.CategoryRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.CategoryService;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -20,19 +24,35 @@ public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
   private final UserRepository userRepository;
+  private final CustomFunction customFunction;
 
   @Override
   public ResponseEntity<HttpStatus> addCategory(
     UserPrincipal principal,
-    CategoryEntity category
-  ) {
+    // CategoryEntity category
+    CategoryDto categoryDto
+  ) throws IOException {
+    String uploadDir =
+      "public/images/CategoryImage/" + categoryDto.getCategoryname();
+    MultipartFile imageFile = categoryDto.getImageurl();
+    String filename = customFunction.uploadFunction(uploadDir, imageFile);
+
+    CategoryEntity categoryEntity = new CategoryEntity();
+
+    if (filename != null && !filename.isEmpty()) {
+      categoryEntity.setImageurl(filename);
+    }
+    
+    categoryEntity.setCategoryname(categoryDto.getCategoryname());
+    categoryEntity.setDescription(categoryDto.getDescription());
+    categoryEntity.setCreated_date(new Date());
+    categoryEntity.setUpdated_date(new Date());
+
     userRepository
       .findByEmail(principal.getEmail())
       .map(user -> {
-        category.setUserEntity(user);
-        category.setCreated_date(new Date());
-        category.setUpdated_date(new Date());
-        return categoryRepository.save(category);
+        categoryEntity.setUserEntity(user);
+        return categoryRepository.save(categoryEntity);
       });
 
     return new ResponseEntity<>(HttpStatus.CREATED);

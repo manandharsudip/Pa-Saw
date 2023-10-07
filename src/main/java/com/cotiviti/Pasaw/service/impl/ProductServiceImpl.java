@@ -1,11 +1,16 @@
 package com.cotiviti.Pasaw.service.impl;
 
+import com.cotiviti.Pasaw.dto.ProductDto;
+import com.cotiviti.Pasaw.entity.CategoryEntity;
 import com.cotiviti.Pasaw.entity.ProductEntity;
+import com.cotiviti.Pasaw.functions.CustomFunction;
+import com.cotiviti.Pasaw.repository.CategoryRepository;
 // import com.cotiviti.Pasaw.model.Status;
 import com.cotiviti.Pasaw.repository.ProductRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.ProductService;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -21,20 +27,48 @@ public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
   private final UserRepository userRepository;
+  private final CategoryRepository categoryRepository;
+  private final CustomFunction customFunction;
 
   @Override
   public ResponseEntity<HttpStatus> addProduct(
     UserPrincipal principal,
-    ProductEntity product
-  ) {
+    // ProductEntity product,
+    ProductDto productDto
+  ) throws IOException {
+    CategoryEntity categoryEntity = categoryRepository
+      .findById(productDto.getCategoryid())
+      .orElseThrow();
+
+
+    // path, file and upload function
+    String uploadDir =
+      "public/images/Products/" + categoryEntity.getCategoryname();
+    MultipartFile imageFile = productDto.getImageurl();
+    String filename = customFunction.uploadFunction(uploadDir, imageFile);
+
+    ProductEntity productEntity = new ProductEntity();
+
+    productEntity.setProductname(productDto.getProductname());
+    productEntity.setDescription(productDto.getDescription());
+    productEntity.setCategoryid(productDto.getCategoryid());
+    productEntity.setPrice(productDto.getPrice());
+    productEntity.setStatus(productDto.getStatus());
+
+
+    // productEntity.setStatus(Status.COMING_SOON);
+    if (filename != null && !filename.isEmpty()) {
+      productEntity.setImageurl(filename);
+    }
+
+    productEntity.setCreated_date(new Date());
+    productEntity.setUpdated_date(new Date());
+
     userRepository
       .findByEmail(principal.getEmail())
       .map(user -> {
-        product.setUserEntity(user);
-        // product.setStatus(Status.COMING_SOON);
-        product.setCreated_date(new Date());
-        product.setUpdated_date(new Date());
-        return productRepository.save(product);
+        productEntity.setUserEntity(user);
+        return productRepository.save(productEntity);
       });
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
