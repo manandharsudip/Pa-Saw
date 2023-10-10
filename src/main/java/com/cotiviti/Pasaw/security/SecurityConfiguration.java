@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration // what is this?
 @EnableWebSecurity // what is this?
@@ -25,14 +27,30 @@ public class SecurityConfiguration {
   private final CustomUserDetailService customUserDetailService;
 
   @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry
+          .addMapping("/**")
+          .allowedMethods("GET", "PUT", "POST", "DELETE")
+          .allowedHeaders("*")
+          .allowedOriginPatterns("*")
+          .allowCredentials(true);
+      }
+    };
+  }
+
+  @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http)
     throws Exception {
     http.addFilterBefore(
       jwtAuthenticationFilter,
       UsernamePasswordAuthenticationFilter.class
     );
+    http.cors();
     http
-      .cors(AbstractHttpConfigurer::disable)
+      // .cors(AbstractHttpConfigurer::disable)
       .csrf(AbstractHttpConfigurer::disable)
       .sessionManagement(session ->
         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // rest API should be stateless, that is what this configuration does
@@ -41,13 +59,21 @@ public class SecurityConfiguration {
       .headers(headers -> headers.frameOptions().disable())
       .authorizeHttpRequests(auth ->
         auth
-          .antMatchers("/", "/auth/login", "/login", "/register", "/notsecured")
+          .antMatchers(
+            "/",
+            "/auth/login",
+            "/login",
+            "/register",
+            "/notsecured",
+            "/api/ems/product/**",
+            "/api/ems/category/**"
+          )
           .permitAll()
-          .antMatchers("/customer")
+          .antMatchers("/customer", "/api/ems/cart/**", "/myInfo")
           .hasRole("CUSTOMER")
-          .antMatchers("/admin")
+          .antMatchers("/admin", "/api/ems/order/**")
           .hasRole("ADMIN")
-          .antMatchers("/user", "/api/ems/category/**", "/api/ems/product/**")
+          .antMatchers("/user")
           .hasAnyRole("ADMIN", "USER")
           .requestMatchers(toH2Console())
           .permitAll()

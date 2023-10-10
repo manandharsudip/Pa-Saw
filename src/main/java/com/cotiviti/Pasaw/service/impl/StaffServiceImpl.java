@@ -5,6 +5,8 @@ import com.cotiviti.Pasaw.dto.OrderDto;
 import com.cotiviti.Pasaw.repository.OrderRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
+import com.cotiviti.Pasaw.service.StaffService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
@@ -15,11 +17,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class StaffServiceImpl {
+public class StaffServiceImpl implements StaffService {
 
   private final OrderRepository orderRepository;
   private final UserRepository userRepository;
 
+  @Override
   public ResponseEntity<HttpStatus> updateOrderStatusById(
     Long orderId,
     UserPrincipal principal,
@@ -37,6 +40,7 @@ public class StaffServiceImpl {
       return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @Override
   public void sendToDelivery() {
     //
   }

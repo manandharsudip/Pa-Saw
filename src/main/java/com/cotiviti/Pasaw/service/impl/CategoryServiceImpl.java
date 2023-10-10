@@ -2,6 +2,7 @@ package com.cotiviti.Pasaw.service.impl;
 
 import com.cotiviti.Pasaw.dto.CategoryDto;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
+import com.cotiviti.Pasaw.exception.ResourceNotFoundException;
 import com.cotiviti.Pasaw.functions.CustomFunction;
 import com.cotiviti.Pasaw.repository.CategoryRepository;
 import com.cotiviti.Pasaw.repository.UserRepository;
@@ -29,7 +30,6 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public ResponseEntity<HttpStatus> addCategory(
     UserPrincipal principal,
-    // CategoryEntity category
     CategoryDto categoryDto
   ) throws IOException {
     String uploadDir =
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     if (filename != null && !filename.isEmpty()) {
       categoryEntity.setImageurl(filename);
     }
-    
+
     categoryEntity.setCategoryname(categoryDto.getCategoryname());
     categoryEntity.setDescription(categoryDto.getDescription());
     categoryEntity.setCreated_date(new Date());
@@ -53,20 +53,29 @@ public class CategoryServiceImpl implements CategoryService {
       .map(user -> {
         categoryEntity.setUserEntity(user);
         return categoryRepository.save(categoryEntity);
-      });
+      })
+      .orElseThrow(() ->
+        new ResourceNotFoundException("Could not set user entity")
+      );
 
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @Override
   public ResponseEntity<List<CategoryEntity>> getAllCategory() {
-    List<CategoryEntity> cats = categoryRepository.findAll();
-    return new ResponseEntity<>(cats, HttpStatus.OK);
+    try {
+      List<CategoryEntity> cats = categoryRepository.findAll();
+      return new ResponseEntity<>(cats, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Override
   public ResponseEntity<CategoryEntity> getCategoryById(Long catId) {
-    CategoryEntity cat = categoryRepository.findById(catId).orElseThrow();
+    CategoryEntity cat = categoryRepository
+      .findById(catId)
+      .orElseThrow(() -> new ResourceNotFoundException("Category Not Found"));
     return new ResponseEntity<>(cat, HttpStatus.OK);
   }
 
@@ -76,7 +85,9 @@ public class CategoryServiceImpl implements CategoryService {
     Long catId,
     CategoryEntity category
   ) {
-    CategoryEntity oldCat = categoryRepository.findById(catId).orElseThrow();
+    CategoryEntity oldCat = categoryRepository
+      .findById(catId)
+      .orElseThrow(() -> new ResourceNotFoundException("Category Not Found"));
 
     String catname = category.getCategoryname();
     String description = category.getDescription();
@@ -107,9 +118,10 @@ public class CategoryServiceImpl implements CategoryService {
   public ResponseEntity<HttpStatus> deleteCategoryById(Long catId) {
     boolean exists = categoryRepository.existsById(catId);
 
-    if (exists) {
-      categoryRepository.deleteById(catId);
+    if (!exists) {
+      throw new ResourceNotFoundException("Category Not Found");
     }
+    categoryRepository.deleteById(catId);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

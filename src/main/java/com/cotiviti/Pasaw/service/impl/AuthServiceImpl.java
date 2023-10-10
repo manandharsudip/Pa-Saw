@@ -50,6 +50,10 @@ public class AuthServiceImpl implements AuthService {
     //   return LoginResponse.builder().accessToken(token).build();
     // }
 
-    return LoginResponse.builder().accessToken(token).build();
+    return LoginResponse
+      .builder()
+      .accessToken(token)
+      .userPrincipal(principal)
+      .build();
   }
 }

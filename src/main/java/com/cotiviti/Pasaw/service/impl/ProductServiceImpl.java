@@ -1,8 +1,10 @@
 package com.cotiviti.Pasaw.service.impl;
 
 import com.cotiviti.Pasaw.dto.ProductDto;
+import com.cotiviti.Pasaw.dto.ProductResponseDto;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
 import com.cotiviti.Pasaw.entity.ProductEntity;
+import com.cotiviti.Pasaw.exception.ResourceNotFoundException;
 import com.cotiviti.Pasaw.functions.CustomFunction;
 import com.cotiviti.Pasaw.repository.CategoryRepository;
 // import com.cotiviti.Pasaw.model.Status;
@@ -11,6 +13,7 @@ import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.ProductService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -38,8 +41,7 @@ public class ProductServiceImpl implements ProductService {
   ) throws IOException {
     CategoryEntity categoryEntity = categoryRepository
       .findById(productDto.getCategoryid())
-      .orElseThrow();
-
+      .orElseThrow(() -> new ResourceNotFoundException("Category Not Found"));
 
     // path, file and upload function
     String uploadDir =
@@ -54,7 +56,6 @@ public class ProductServiceImpl implements ProductService {
     productEntity.setCategoryid(productDto.getCategoryid());
     productEntity.setPrice(productDto.getPrice());
     productEntity.setStatus(productDto.getStatus());
-
 
     // productEntity.setStatus(Status.COMING_SOON);
     if (filename != null && !filename.isEmpty()) {
@@ -74,23 +75,67 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public ResponseEntity<List<ProductEntity>> getAllProducts() {
+  public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
     List<ProductEntity> products = productRepository.findAll();
-    return new ResponseEntity<>(products, HttpStatus.OK);
+
+    List<ProductResponseDto> reponseProduct = new ArrayList<>();
+    for (ProductEntity product : products) {
+        ProductResponseDto dto = new ProductResponseDto();
+        dto.setProdutId(product.getId());
+        dto.setProductname(product.getProductname());
+        dto.setCategoryname(categoryRepository.findById(product.getCategoryid()).orElseThrow().getCategoryname());
+        dto.setDescription(product.getDescription());
+        dto.setUserId(product.getUserEntity().getId());
+        dto.setPrice(product.getPrice());
+        dto.setImageurl(product.getImageurl());
+        dto.setStatus(product.getStatus());
+        reponseProduct.add(dto);
+    }
+
+    return new ResponseEntity<>(reponseProduct, HttpStatus.OK);
   }
 
   @Override
-  public ResponseEntity<List<ProductEntity>> getProductByCategoryId(
+  public ResponseEntity<List<ProductResponseDto>> getProductByCategoryId(
     Long catId
   ) {
     List<ProductEntity> products = productRepository.findByCategoryid(catId);
-    return new ResponseEntity<>(products, HttpStatus.OK);
+    
+    List<ProductResponseDto> reponseProduct = new ArrayList<>();
+    for (ProductEntity product : products) {
+        ProductResponseDto dto = new ProductResponseDto();
+        dto.setProdutId(product.getId());
+        dto.setProductname(product.getProductname());
+        dto.setCategoryname(categoryRepository.findById(product.getCategoryid()).orElseThrow().getCategoryname());
+        dto.setDescription(product.getDescription());
+        dto.setUserId(product.getUserEntity().getId());
+        dto.setPrice(product.getPrice());
+        dto.setImageurl(product.getImageurl());
+        dto.setStatus(product.getStatus());
+        reponseProduct.add(dto);
+    }
+
+    return new ResponseEntity<>(reponseProduct, HttpStatus.OK);
   }
 
   @Override
-  public ResponseEntity<ProductEntity> getProdutById(Long productId) {
-    ProductEntity product = productRepository.findById(productId).orElseThrow();
-    return new ResponseEntity<>(product, HttpStatus.OK);
+  public ResponseEntity<ProductResponseDto> getProdutById(Long productId) {
+    ProductEntity product = productRepository
+      .findById(productId)
+      .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
+
+      ProductResponseDto productDto = new ProductResponseDto();
+        productDto.setProdutId(product.getId());
+        productDto.setProductname(product.getProductname());
+        productDto.setCategoryname(categoryRepository.findById(product.getCategoryid()).orElseThrow().getCategoryname());
+        productDto.setDescription(product.getDescription());
+        productDto.setUserId(product.getUserEntity().getId());
+        productDto.setPrice(product.getPrice());
+        productDto.setImageurl(product.getImageurl());
+        productDto.setStatus(product.getStatus());
+
+
+    return new ResponseEntity<>(productDto, HttpStatus.OK);
   }
 
   @Override
@@ -101,7 +146,7 @@ public class ProductServiceImpl implements ProductService {
   ) {
     ProductEntity oldProduct = productRepository
       .findById(productId)
-      .orElseThrow();
+      .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
     String productname = product.getProductname();
     Long categoryid = product.getCategoryid();
@@ -150,9 +195,10 @@ public class ProductServiceImpl implements ProductService {
   public ResponseEntity<HttpStatus> deleteProductById(Long productId) {
     boolean exists = productRepository.existsById(productId);
 
-    if (exists) {
-      productRepository.deleteById(productId);
+    if (!exists) {
+      throw new ResourceNotFoundException("Product Not Found");
     }
+    productRepository.deleteById(productId);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

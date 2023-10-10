@@ -1,6 +1,7 @@
 package com.cotiviti.Pasaw.service;
 
 import com.cotiviti.Pasaw.dto.ProductDto;
+import com.cotiviti.Pasaw.dto.ProductResponseDto;
 import com.cotiviti.Pasaw.entity.ProductEntity;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 
@@ -16,11 +17,11 @@ public interface ProductService {
     ProductDto productDto
   ) throws IOException;
 
-  ResponseEntity<List<ProductEntity>> getAllProducts();
+  ResponseEntity<List<ProductResponseDto>> getAllProducts();
 
-  ResponseEntity<ProductEntity> getProdutById(Long catId);
+  ResponseEntity<ProductResponseDto> getProdutById(Long catId);
 
-  ResponseEntity<List<ProductEntity>> getProductByCategoryId(Long catId);
+  ResponseEntity<List<ProductResponseDto>> getProductByCategoryId(Long catId);
 
   ResponseEntity<HttpStatus> updateProductById(
     Long productId,

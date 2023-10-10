@@ -13,12 +13,12 @@ import lombok.Setter;
 @Setter
 public class ProductDto {
 
-  private String productname;
-  private Long categoryid;
-  private String description;
-  private Float price;
-  private MultipartFile imageurl;
+    private String productname;
+    private Long categoryid;
+    private String description;
+    private Float price;
+    private MultipartFile imageurl;
 
-  @Enumerated(EnumType.ORDINAL)
-  private Status status;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 }
