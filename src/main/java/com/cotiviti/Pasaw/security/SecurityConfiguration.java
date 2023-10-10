@@ -76,7 +76,7 @@ public class SecurityConfiguration {
           .antMatchers("/user")
           .hasAnyRole("ADMIN", "USER")
           .requestMatchers(toH2Console())
-          .permitAll()
+          .permitAll()  
           .anyRequest()
           .authenticated()
       );

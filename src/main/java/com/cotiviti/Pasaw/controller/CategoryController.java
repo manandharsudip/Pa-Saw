@@ -1,6 +1,7 @@
 package com.cotiviti.Pasaw.controller;
 
 import com.cotiviti.Pasaw.dto.CategoryDto;
+import com.cotiviti.Pasaw.dto.CategoryResponseDto;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.CategoryService;
@@ -30,7 +31,7 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @GetMapping
-  public ResponseEntity<List<CategoryEntity>> getAllCategories() {
+  public ResponseEntity<List<CategoryResponseDto>> getAllCategories() {
     try {
       return categoryService.getAllCategory();
     } catch (Exception e) {

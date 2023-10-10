@@ -1,7 +1,10 @@
 package com.cotiviti.Pasaw.service.impl;
 
 import com.cotiviti.Pasaw.dto.CategoryDto;
+import com.cotiviti.Pasaw.dto.CategoryResponseDto;
+import com.cotiviti.Pasaw.dto.ProductResponseDto;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
+import com.cotiviti.Pasaw.entity.ProductEntity;
 import com.cotiviti.Pasaw.exception.ResourceNotFoundException;
 import com.cotiviti.Pasaw.functions.CustomFunction;
 import com.cotiviti.Pasaw.repository.CategoryRepository;
@@ -9,6 +12,7 @@ import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.CategoryService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -62,10 +66,22 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public ResponseEntity<List<CategoryEntity>> getAllCategory() {
+  public ResponseEntity<List<CategoryResponseDto>> getAllCategory() {
     try {
       List<CategoryEntity> cats = categoryRepository.findAll();
-      return new ResponseEntity<>(cats, HttpStatus.OK);
+
+      List<CategoryResponseDto> reponseCategory = new ArrayList<>();
+      for (CategoryEntity category : cats) {
+        CategoryResponseDto dto = new CategoryResponseDto();
+        dto.setCategoryId(category.getId());
+        dto.setCategoryname(category.getCategoryname());
+        dto.setDescription(category.getDescription());
+        dto.setAddedBy(category.getUserEntity().getId());
+        dto.setImageurl(category.getImageurl());
+        reponseCategory.add(dto);
+      }
+
+      return new ResponseEntity<>(reponseCategory, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
