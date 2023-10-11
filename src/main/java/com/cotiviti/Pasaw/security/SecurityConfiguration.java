@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration // what is this?
-@EnableWebSecurity // what is this?
+@Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
@@ -69,14 +69,19 @@ public class SecurityConfiguration {
             "/api/ems/category/**"
           )
           .permitAll()
-          .antMatchers("/customer", "/api/ems/cart/**", "/myInfo")
+          .antMatchers(
+            "/customer",
+            "/api/ems/cart/**",
+            "/myInfo",
+            "/api/ems/order/addOrder"
+          )
           .hasRole("CUSTOMER")
           .antMatchers("/admin", "/api/ems/order/**")
           .hasRole("ADMIN")
           .antMatchers("/user")
           .hasAnyRole("ADMIN", "USER")
           .requestMatchers(toH2Console())
-          .permitAll()  
+          .permitAll()
           .anyRequest()
           .authenticated()
       );

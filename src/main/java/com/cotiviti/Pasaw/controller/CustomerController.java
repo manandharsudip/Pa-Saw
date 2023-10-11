@@ -36,6 +36,9 @@ public class CustomerController {
 
   @PostMapping("/login")
   public LoginResponse login(@RequestBody @Validated LoginRequest request) {
+    System.out.println("Email: "+ request.getEmail());
+    System.out.println("Password: "+ request.getPassword());
+
     return authService.loginAttempt(request.getEmail(), request.getPassword());
   }
 

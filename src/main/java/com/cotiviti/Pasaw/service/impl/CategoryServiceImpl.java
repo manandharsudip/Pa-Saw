@@ -36,9 +36,15 @@ public class CategoryServiceImpl implements CategoryService {
     UserPrincipal principal,
     CategoryDto categoryDto
   ) throws IOException {
+    // D:\Final Project Java\pasaw-ui\src\assets
+
     String uploadDir =
-      "public/images/CategoryImage/" + categoryDto.getCategoryname();
+      "D:/Final Project Java/pasaw-ui/src/assets/images/CategoryImage/" +
+      categoryDto.getCategoryname();
+    // String uploadDir =
+    // "public/images/CategoryImage/" + categoryDto.getCategoryname();
     MultipartFile imageFile = categoryDto.getImageurl();
+    System.out.println("Image File: " + imageFile);
     String filename = customFunction.uploadFunction(uploadDir, imageFile);
 
     CategoryEntity categoryEntity = new CategoryEntity();
@@ -99,15 +105,15 @@ public class CategoryServiceImpl implements CategoryService {
   @Transactional
   public ResponseEntity<HttpStatus> updateCategory(
     Long catId,
-    CategoryEntity category
-  ) {
+    CategoryDto category
+  ) throws IOException {
     CategoryEntity oldCat = categoryRepository
       .findById(catId)
       .orElseThrow(() -> new ResourceNotFoundException("Category Not Found"));
 
     String catname = category.getCategoryname();
     String description = category.getDescription();
-    String imageurl = category.getImageurl();
+    MultipartFile imageurl = category.getImageurl();
 
     if (catname != null && !Objects.equals(catname, oldCat.getCategoryname())) {
       oldCat.setCategoryname(catname);
@@ -121,7 +127,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     if (imageurl != null && !Objects.equals(imageurl, oldCat.getImageurl())) {
-      oldCat.setImageurl(imageurl);
+      String uploadDir =
+        "D:/Final Project Java/pasaw-ui/src/assets/images/CategoryImage/" +
+        category.getCategoryname();
+      // String uploadDir =
+      // "public/images/CategoryImage/" + category.getCategoryname();
+      MultipartFile imageFile = category.getImageurl();
+      System.out.println("Image File: " + imageFile);
+      String filename = customFunction.uploadFunction(uploadDir, imageFile);
+
+      if (filename != null && !filename.isEmpty()) {
+        oldCat.setImageurl(filename);
+      }
     }
 
     oldCat.setUpdated_date(new Date());

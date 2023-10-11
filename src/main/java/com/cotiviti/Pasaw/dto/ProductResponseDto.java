@@ -12,6 +12,7 @@ public class ProductResponseDto {
 
   private Long produtId;
   private String productname;
+  private Long categoryid;
   private String categoryname;
   private String description;
   private Long userId;

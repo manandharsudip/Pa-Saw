@@ -2,7 +2,9 @@ package com.cotiviti.Pasaw.controller;
 
 import com.cotiviti.Pasaw.dto.CategoryDto;
 import com.cotiviti.Pasaw.dto.CategoryResponseDto;
+import com.cotiviti.Pasaw.dto.TestDTO;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
+import com.cotiviti.Pasaw.model.LoginResponse;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.CategoryService;
 import java.io.IOException;
@@ -53,18 +55,35 @@ public class CategoryController {
   @PostMapping("/add")
   public ResponseEntity<HttpStatus> addNewCategory(
     @AuthenticationPrincipal UserPrincipal userPrincipal,
+    @RequestBody TestDTO categoryDto
+  ) throws IOException {
+    
+    System.out.println("Category Name: "+ categoryDto.getCategoryname());
+    // System.out.println("Category DTo: "+ categoryDto.getImageurl());
+    System.out.println("Category DEsc: "+ categoryDto.getDescription());
+    // return categoryService.addCategory(userPrincipal, categoryDto);
+    return null;
+  }
+
+  @PostMapping("/login")
+  // public LoginResponse login(@RequestParam("categoryname") String categoryname, @RequestParam("file") MultipartFile file) {
+  public ResponseEntity<HttpStatus> addNewCategory(
+    @AuthenticationPrincipal UserPrincipal userPrincipal,
     @ModelAttribute CategoryDto categoryDto
   ) throws IOException {
+    System.out.println("My Email: "+ categoryDto.getCategoryname());
+    System.out.println("My Email: "+ categoryDto.getDescription());
+    System.out.println("My Email: "+ categoryDto.getImageurl());
     return categoryService.addCategory(userPrincipal, categoryDto);
   }
 
   @PutMapping("/update/{catId}")
   public ResponseEntity<HttpStatus> updateCategory(
     @PathVariable("catId") Long catId,
-    @RequestBody CategoryEntity category
+    @ModelAttribute CategoryDto categoryDto
   ) {
     try {
-      return categoryService.updateCategory(catId, category);
+      return categoryService.updateCategory(catId, categoryDto);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }

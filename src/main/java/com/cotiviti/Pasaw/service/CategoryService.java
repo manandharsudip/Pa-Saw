@@ -16,6 +16,6 @@ public interface CategoryService {
     public ResponseEntity<HttpStatus> addCategory(UserPrincipal principal, CategoryDto categoryDto) throws IOException;
     public ResponseEntity<List<CategoryResponseDto>> getAllCategory();
     public ResponseEntity<CategoryEntity> getCategoryById(Long catId);
-    public ResponseEntity<HttpStatus> updateCategory(Long catId, CategoryEntity category);
+    public ResponseEntity<HttpStatus> updateCategory(Long catId, CategoryDto categoryDto) throws IOException;
     public ResponseEntity<HttpStatus> deleteCategoryById(Long catId);
 }

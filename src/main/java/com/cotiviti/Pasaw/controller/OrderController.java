@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,10 +30,23 @@ public class OrderController {
   @PostMapping("/addOrder")
   public ResponseEntity<HttpStatus> addOrder(
     @AuthenticationPrincipal UserPrincipal userPrincipal,
-    @RequestBody OrderDto orderDto
+    @ModelAttribute OrderDto orderDto
   ) {
     try {
       return orderService.addOrder(userPrincipal, orderDto);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PutMapping("/changeStatus/{id}")
+  public ResponseEntity<HttpStatus> changeStatus(
+    @AuthenticationPrincipal UserPrincipal userPrincipal,
+    @ModelAttribute OrderDto orderDto,
+    @PathVariable("id") Long id
+  ) {
+    try {
+      return orderService.changeStatus(userPrincipal, orderDto, id);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }

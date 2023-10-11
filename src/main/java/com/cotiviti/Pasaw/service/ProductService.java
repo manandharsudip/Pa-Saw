@@ -25,8 +25,8 @@ public interface ProductService {
 
   ResponseEntity<HttpStatus> updateProductById(
     Long productId,
-    ProductEntity product
-  );
+    ProductDto productDto
+  ) throws IOException;
 
   ResponseEntity<HttpStatus> deleteProductById(Long productId);
 }

@@ -13,6 +13,8 @@ public interface OrderService {
 
     ResponseEntity<HttpStatus> addOrder(UserPrincipal userPrincipal, OrderDto orderDto);
 
+    ResponseEntity<HttpStatus> changeStatus(UserPrincipal userPrincipal, OrderDto orderDto, Long id);
+
     ResponseEntity<List<OrdersEntity>> getAllOrders();
 
     ResponseEntity<List<OrdersEntity>> getPendingOrders();

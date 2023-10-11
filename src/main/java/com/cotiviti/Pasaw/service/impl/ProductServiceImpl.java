@@ -45,7 +45,10 @@ public class ProductServiceImpl implements ProductService {
 
     // path, file and upload function
     String uploadDir =
-      "public/images/Products/" + categoryEntity.getCategoryname();
+      "D:/Final Project Java/pasaw-ui/src/assets/images/Products/" +
+      categoryEntity.getCategoryname();
+    // String uploadDir =
+    //   "public/images/Products/" + categoryEntity.getCategoryname();
     MultipartFile imageFile = productDto.getImageurl();
     String filename = customFunction.uploadFunction(uploadDir, imageFile);
 
@@ -80,16 +83,22 @@ public class ProductServiceImpl implements ProductService {
 
     List<ProductResponseDto> reponseProduct = new ArrayList<>();
     for (ProductEntity product : products) {
-        ProductResponseDto dto = new ProductResponseDto();
-        dto.setProdutId(product.getId());
-        dto.setProductname(product.getProductname());
-        dto.setCategoryname(categoryRepository.findById(product.getCategoryid()).orElseThrow().getCategoryname());
-        dto.setDescription(product.getDescription());
-        dto.setUserId(product.getUserEntity().getId());
-        dto.setPrice(product.getPrice());
-        dto.setImageurl(product.getImageurl());
-        dto.setStatus(product.getStatus());
-        reponseProduct.add(dto);
+      ProductResponseDto dto = new ProductResponseDto();
+      dto.setProdutId(product.getId());
+      dto.setProductname(product.getProductname());
+      dto.setCategoryid(product.getCategoryid());
+      dto.setCategoryname(
+        categoryRepository
+          .findById(product.getCategoryid())
+          .orElseThrow()
+          .getCategoryname()
+      );
+      dto.setDescription(product.getDescription());
+      dto.setUserId(product.getUserEntity().getId());
+      dto.setPrice(product.getPrice());
+      dto.setImageurl(product.getImageurl());
+      dto.setStatus(product.getStatus());
+      reponseProduct.add(dto);
     }
 
     return new ResponseEntity<>(reponseProduct, HttpStatus.OK);
@@ -100,19 +109,25 @@ public class ProductServiceImpl implements ProductService {
     Long catId
   ) {
     List<ProductEntity> products = productRepository.findByCategoryid(catId);
-    
+
     List<ProductResponseDto> reponseProduct = new ArrayList<>();
     for (ProductEntity product : products) {
-        ProductResponseDto dto = new ProductResponseDto();
-        dto.setProdutId(product.getId());
-        dto.setProductname(product.getProductname());
-        dto.setCategoryname(categoryRepository.findById(product.getCategoryid()).orElseThrow().getCategoryname());
-        dto.setDescription(product.getDescription());
-        dto.setUserId(product.getUserEntity().getId());
-        dto.setPrice(product.getPrice());
-        dto.setImageurl(product.getImageurl());
-        dto.setStatus(product.getStatus());
-        reponseProduct.add(dto);
+      ProductResponseDto dto = new ProductResponseDto();
+      dto.setProdutId(product.getId());
+      dto.setProductname(product.getProductname());
+      dto.setCategoryid(product.getCategoryid());
+      dto.setCategoryname(
+        categoryRepository
+          .findById(product.getCategoryid())
+          .orElseThrow()
+          .getCategoryname()
+      );
+      dto.setDescription(product.getDescription());
+      dto.setUserId(product.getUserEntity().getId());
+      dto.setPrice(product.getPrice());
+      dto.setImageurl(product.getImageurl());
+      dto.setStatus(product.getStatus());
+      reponseProduct.add(dto);
     }
 
     return new ResponseEntity<>(reponseProduct, HttpStatus.OK);
@@ -124,16 +139,20 @@ public class ProductServiceImpl implements ProductService {
       .findById(productId)
       .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
-      ProductResponseDto productDto = new ProductResponseDto();
-        productDto.setProdutId(product.getId());
-        productDto.setProductname(product.getProductname());
-        productDto.setCategoryname(categoryRepository.findById(product.getCategoryid()).orElseThrow().getCategoryname());
-        productDto.setDescription(product.getDescription());
-        productDto.setUserId(product.getUserEntity().getId());
-        productDto.setPrice(product.getPrice());
-        productDto.setImageurl(product.getImageurl());
-        productDto.setStatus(product.getStatus());
-
+    ProductResponseDto productDto = new ProductResponseDto();
+    productDto.setProdutId(product.getId());
+    productDto.setProductname(product.getProductname());
+    productDto.setCategoryname(
+      categoryRepository
+        .findById(product.getCategoryid())
+        .orElseThrow()
+        .getCategoryname()
+    );
+    productDto.setDescription(product.getDescription());
+    productDto.setUserId(product.getUserEntity().getId());
+    productDto.setPrice(product.getPrice());
+    productDto.setImageurl(product.getImageurl());
+    productDto.setStatus(product.getStatus());
 
     return new ResponseEntity<>(productDto, HttpStatus.OK);
   }
@@ -142,17 +161,31 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public ResponseEntity<HttpStatus> updateProductById(
     Long productId,
-    ProductEntity product
-  ) {
+    ProductDto productDto
+  ) throws IOException {
+    CategoryEntity categoryEntity = categoryRepository
+      .findById(productDto.getCategoryid())
+      .orElseThrow(() -> new ResourceNotFoundException("Category Not Found"));
+
+      System.out.println("My Email: " + productDto.getProductname());
+      System.out.println("My Email: " + productId);
+      System.out.println("My Email: " + productDto.getImageurl());
+
+    // path, file and upload function
+    String uploadDir =
+      "D:/Final Project Java/pasaw-ui/src/assets/images/Products/" +
+      categoryEntity.getCategoryname();
+    MultipartFile imageFile = productDto.getImageurl();
+    String filename = customFunction.uploadFunction(uploadDir, imageFile);
+
     ProductEntity oldProduct = productRepository
       .findById(productId)
       .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
-    String productname = product.getProductname();
-    Long categoryid = product.getCategoryid();
-    String description = product.getDescription();
-    String imageurl = product.getImageurl();
-    Float price = product.getPrice();
+    String productname = productDto.getProductname();
+    Long categoryid = productDto.getCategoryid();
+    String description = productDto.getDescription();
+    Float price = productDto.getPrice();
 
     if (
       productname != null &&
@@ -176,9 +209,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     if (
-      imageurl != null && !Objects.equals(imageurl, oldProduct.getImageurl())
+      filename != null &&
+      !Objects.equals(filename, oldProduct.getImageurl()) &&
+      !filename.isEmpty()
     ) {
-      oldProduct.setImageurl(imageurl);
+      oldProduct.setImageurl(filename);
     }
 
     if (price != null && !Objects.equals(price, oldProduct.getPrice())) {

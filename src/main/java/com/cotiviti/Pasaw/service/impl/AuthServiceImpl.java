@@ -23,12 +23,12 @@ public class AuthServiceImpl implements AuthService {
     var authentication = authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(email, password)
     );
-
+    
+    SecurityContextHolder.getContext().setAuthentication(authentication);
     // this above line is enough for authentication...
 
-    System.out.println("Authentication Obj: " + authentication);
+    // System.out.println("Authentication Obj: " + authentication);
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
 
     var principal = (UserPrincipal) authentication.getPrincipal();
 
