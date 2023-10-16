@@ -1,6 +1,6 @@
 package com.cotiviti.Pasaw.entity;
 
-// import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import java.util.Date;
 
@@ -37,6 +37,10 @@ public class UserEntity {
 
   @Column(nullable = false)
   private String role;
+
+  private Long phonenumber;
+
+  private String address;
 
   private Date created_date;
 

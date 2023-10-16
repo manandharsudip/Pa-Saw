@@ -4,7 +4,6 @@ import com.cotiviti.Pasaw.dto.CategoryDto;
 import com.cotiviti.Pasaw.dto.CategoryResponseDto;
 import com.cotiviti.Pasaw.dto.TestDTO;
 import com.cotiviti.Pasaw.entity.CategoryEntity;
-import com.cotiviti.Pasaw.model.LoginResponse;
 import com.cotiviti.Pasaw.security.UserPrincipal;
 import com.cotiviti.Pasaw.service.CategoryService;
 import java.io.IOException;

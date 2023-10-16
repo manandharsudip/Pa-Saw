@@ -1,5 +1,6 @@
 package com.cotiviti.Pasaw.controller;
 
+import com.cotiviti.Pasaw.dto.UserDTO;
 import com.cotiviti.Pasaw.entity.UserEntity;
 import com.cotiviti.Pasaw.model.LoginRequest;
 import com.cotiviti.Pasaw.model.LoginResponse;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,5 +47,10 @@ public class CustomerController {
   @PostMapping("/register")
   public ResponseEntity<HttpStatus> register(@RequestBody UserEntity customer) throws Exception {
     return customerService.registerNewCustomer(customer);
+  }
+
+  @PutMapping("/updateUser")
+  public ResponseEntity<HttpStatus> updateUser(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody UserDTO customer) throws Exception {
+    return customerService.updateUser(userPrincipal, customer);
   }
 }

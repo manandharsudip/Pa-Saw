@@ -1,5 +1,6 @@
 package com.cotiviti.Pasaw.service.impl;
 
+import com.cotiviti.Pasaw.dto.CartDto;
 import com.cotiviti.Pasaw.dto.OrderDto;
 import com.cotiviti.Pasaw.entity.CartEntity;
 import com.cotiviti.Pasaw.exception.ResourceNotFoundException;
@@ -48,6 +49,20 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
+  public ResponseEntity<HttpStatus> updateToCart(
+    List<CartDto> cartDto
+  ) {
+
+     for (CartDto cart : cartDto) {
+        CartEntity cartEntity = cartRepository.findById(cart.getOrderid()).orElseThrow();
+        cartEntity.setQuantity(cart.getQuantity());
+        cartRepository.save(cartEntity);
+    }
+
+    return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+  }
+
+  @Override
   public ResponseEntity<List<CartEntity>> getCartItemsByUserId(Long id) {
     List<CartEntity> cartEntity = cartRepository.findByUserEntity(
       userRepository
@@ -72,5 +87,10 @@ public class CartServiceImpl implements CartService {
       CartStatus.NOTCHECKOUT
     );
     return new ResponseEntity<>(cartEntity, HttpStatus.OK);
+  }
+
+  public ResponseEntity<HttpStatus> deleteById(Long id){
+    cartRepository.deleteById(id);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

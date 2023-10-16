@@ -15,6 +15,7 @@ public class CartDto {
 
     private Long userid;
     private Long productid;
+    private Long orderid;
     private Long quantity;
     
     @Enumerated(EnumType.ORDINAL)

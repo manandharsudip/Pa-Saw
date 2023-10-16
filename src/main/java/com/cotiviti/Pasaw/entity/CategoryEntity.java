@@ -36,8 +36,6 @@ public class CategoryEntity {
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "added_by", nullable = false)
-  // delete on cascade ?
-  // @JsonIgnore
   private UserEntity userEntity;
 
   private Date created_date;

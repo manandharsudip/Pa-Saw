@@ -1,5 +1,6 @@
 package com.cotiviti.Pasaw.service.impl;
 
+import com.cotiviti.Pasaw.dto.UserDTO;
 import com.cotiviti.Pasaw.entity.UserEntity;
 import com.cotiviti.Pasaw.repository.UserRepository;
 import com.cotiviti.Pasaw.security.UserPrincipal;
@@ -9,6 +10,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +46,16 @@ public class CustomerServiceImpl implements CustomerService {
       .orElseThrow();
 
     return new ResponseEntity<>(user, HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<HttpStatus> updateUser(@AuthenticationPrincipal UserPrincipal userPrincipal, UserDTO user) throws Exception {
+    UserEntity userEntity = userRepository.findById(userPrincipal.getUserId()).orElseThrow();
+
+    userEntity.setAddress(user.getAddress());
+    userEntity.setPhonenumber(user.getPhonenumber());
+    userRepository.save(userEntity);
+    
+    return new ResponseEntity<>(null, HttpStatus.CREATED);
   }
 }
